@@ -11,6 +11,17 @@ import sys
 criteria = '(FROM "appleid@id.apple.com") (SUBJECT "Verify")'
 
 
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
+
 def parseVerificationURL(email_content):
     '''
     Parses the email sent by apple and returns the URL to verify
@@ -35,7 +46,7 @@ def resendVerificationEmail(user, password):
     TODO: Add checking to ensure email account has not already been verified.
     '''
     # new post data to id.apple.com :(
-    print('WARNING:\tUser ' + user + ' will not be processed.')
+    print(bcolors.FAIL + 'WARNING:\tUser ' + user + ' will not be processed.' + bcolors.ENDC)
     print('WARNING:\tVerification email will be resent, run the script at a later time to verify the address.')
 
     # Statis URL to redirect to the actual sign in page
@@ -83,7 +94,7 @@ def resendVerificationEmail(user, password):
         r.close()
     except urllib.error.URLError as e:
         print('CRITICAL:\t' + e.reason)
-        print('CRITICAL:\tFatal error occured while resending verification email')
+        print(bcolors.FAIL + 'CRITICAL:\tFatal error occured while resending verification email' + bcolors.ENDC)
         r.close()
         return
 
@@ -103,7 +114,7 @@ def getURLFromEmail(user, password):
     try:
         M.login(user, password)
     except:
-        print("Login failed, please verify " + user + "'s email credentials")
+        print(bcolors.FAIL + "Login failed, please verify " + user + "'s email credentials" + bcolors.ENDC)
         return url
 
     rv, data = M.select('INBOX')
@@ -133,8 +144,8 @@ def getURLFromEmail(user, password):
 
         if (latest_sent_date <
                 datetime.datetime.now()-datetime.timedelta(days=3)):
-            print('ERROR:\t\tThis email is older than 3 days and is no ' +
-                  'longer valid')
+            print(bcolors.WARNING + 'ERROR:\t\tThis email is older than 3 days and is no ' +
+                  'longer valid' + bcolors.ENDC)
             resendVerificationEmail(user, password)
             return ''
     else:
@@ -191,10 +202,10 @@ def submitVerification(referer_url, user, password):
         response = str(r.read())
         if ('Email address previously verified.' in response or
                 'Email address verified.' in response):
-            print('SUCCESS:\t' + user + ' is ready for use')
+            print(bcolors.OKGREEN + 'SUCCESS:\t' + user + ' is ready for use' + bcolors.ENDC)
         r.close()
     except:
-        print("CRITICAL:\tFatal error occured while verifying email")
+        print(bcolors.FAIL + "CRITICAL:\tFatal error occured while verifying email" + bcolors.ENDC)
         r.close()
 
 
