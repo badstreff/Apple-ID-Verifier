@@ -7,7 +7,7 @@ available at my github.
 
 
 usage:
-    'python3.4 idverification.py file.cv'
+    'python3.4 idverification.py file.csv'
     
 File is expected to be a csv file of the format:
 'appleid,password'
