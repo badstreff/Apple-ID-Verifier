@@ -13,7 +13,8 @@ consuming.
 ## Installation & Usage
 
 The project only requires that you have python 3.4 or greater installed.
-After that, downloed the project, navigate to it's directory and run:
+After that, download the project, navigate to it's directory and run:
+
 `python idverification.py example.csv`
 
 Example.csv is a csv file containing the Apple ID's and and password, it is
