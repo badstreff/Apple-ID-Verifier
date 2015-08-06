@@ -144,8 +144,8 @@ def getURLFromEmail(user, password):
 
         if (latest_sent_date <
                 datetime.datetime.now()-datetime.timedelta(days=3)):
-            print(bcolors.WARNING + 'ERROR:\t\tThis email is older than 3 days and is no ' +
-                  'longer valid' + bcolors.ENDC)
+            print(bcolors.WARNING + 'ERROR:\t\tThis email is older than 3 ' +
+                  'days and is no longer valid' + bcolors.ENDC)
             resendVerificationEmail(user, password)
             return ''
     else:
@@ -227,13 +227,14 @@ if __name__ == "__main__":
             count += 1
             token = line.split(',')
             user = token[0].strip()
-            password = token[1].strip()
+            email_password = token[1].strip()
+            id_password = token[2].strip()
 
-            url = getURLFromEmail(user, password)
+            url = getURLFromEmail(user, email_password)
             if(url == ''):
                 print('ERROR:\tUnable to process ' + user + ' at this time. No url found.')
             else:
-                submitVerification(url, user, password)
+                submitVerification(url, user, id_password)
 
     elapsed_time = int(time.time()) - start_time
 
