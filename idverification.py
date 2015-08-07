@@ -9,6 +9,7 @@ import time
 import sys
 
 criteria = '(FROM "appleid@id.apple.com") (SUBJECT "Verify")'
+DEBUG = True
 
 
 class bcolors:
@@ -28,12 +29,12 @@ def parseVerificationURL(email_content):
     the apple id.
     '''
     c = email_content.as_string()
-    raw_key = c[c.find('key=3D'):c.find('=3D=3D')]
+    raw_key = c[c.find('key=3D'):c.find('=3D', c.find('key=3D')+5)]
     raw_key = raw_key.replace('=\n', '')
     raw_key = raw_key.replace('=3D', '=')
     final_key = raw_key.replace('key=', '')
 
-    final_url = ('https://id.apple.com/cgi-bin/verify.cgi?language=3DUS-EN&' +
+    final_url = ('https://id.apple.com/cgi-bin/verify.cgi?language=US-EN&' +
                  'key=' + final_key + '&type=DFT&_C=USA&_L=en_US')
     return final_url
 
@@ -46,8 +47,10 @@ def resendVerificationEmail(user, password):
     TODO: Add checking to ensure email account has not already been verified.
     '''
     # new post data to id.apple.com :(
-    print(bcolors.FAIL + 'WARNING:\tUser ' + user + ' will not be processed.' + bcolors.ENDC)
-    print('WARNING:\tVerification email will be resent, run the script at a later time to verify the address.')
+    print(bcolors.FAIL + 'WARNING:\tUser ' + user + ' will not be processed.' +
+          bcolors.ENDC)
+    print('WARNING:\tVerification email will be resent, run the script at a' +
+          ' later time to verify the address.')
 
     # Statis URL to redirect to the actual sign in page
     signin_redirect_url = 'https://appleid.apple.com/signin'
@@ -94,7 +97,8 @@ def resendVerificationEmail(user, password):
         r.close()
     except urllib.error.URLError as e:
         print('CRITICAL:\t' + e.reason)
-        print(bcolors.FAIL + 'CRITICAL:\tFatal error occured while resending verification email' + bcolors.ENDC)
+        print(bcolors.FAIL + 'CRITICAL:\tFatal error occured while resending' +
+              ' verification email' + bcolors.ENDC)
         r.close()
         return
 
@@ -114,7 +118,8 @@ def getURLFromEmail(user, password):
     try:
         M.login(user, password)
     except:
-        print(bcolors.FAIL + "Login failed, please verify " + user + "'s email credentials" + bcolors.ENDC)
+        print(bcolors.FAIL + "Login failed, please verify " + user +
+              "'s email credentials" + bcolors.ENDC)
         return url
 
     rv, data = M.select('INBOX')
@@ -202,10 +207,12 @@ def submitVerification(referer_url, user, password):
         response = str(r.read())
         if ('Email address previously verified.' in response or
                 'Email address verified.' in response):
-            print(bcolors.OKGREEN + 'SUCCESS:\t' + user + ' is ready for use' + bcolors.ENDC)
+            print(bcolors.OKGREEN + 'SUCCESS:\t' + user + ' is ready for use' +
+                  bcolors.ENDC)
         r.close()
     except:
-        print(bcolors.FAIL + "CRITICAL:\tFatal error occured while verifying email" + bcolors.ENDC)
+        print(bcolors.FAIL + "CRITICAL:\tFatal error occured while verifying" +
+              " email" + bcolors.ENDC)
         r.close()
 
 
@@ -232,9 +239,11 @@ if __name__ == "__main__":
 
             url = getURLFromEmail(user, email_password)
             if(url == ''):
-                print('ERROR:\tUnable to process ' + user + ' at this time. No url found.')
+                print('ERROR:\tUnable to process ' + user + ' at this time.' +
+                      ' No url found.')
             else:
-                print('DEBUG: ' + url)
+                if(DEBUG):
+                    print('DEBUG: ' + url)
                 submitVerification(url, user, id_password)
 
     elapsed_time = int(time.time()) - start_time
