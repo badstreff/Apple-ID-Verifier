@@ -234,6 +234,7 @@ if __name__ == "__main__":
             if(url == ''):
                 print('ERROR:\tUnable to process ' + user + ' at this time. No url found.')
             else:
+                print('DEBUG: ' + url)
                 submitVerification(url, user, id_password)
 
     elapsed_time = int(time.time()) - start_time
