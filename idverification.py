@@ -107,7 +107,7 @@ def resendVerificationEmail(user, password):
     r.close()
 
 
-def getURLFromEmail(user, password):
+def getURLFromEmail(user, password, id_password):
     '''
     If no valid email is found returns ''
     '''
@@ -134,7 +134,7 @@ def getURLFromEmail(user, password):
             url = parseVerificationURL(content)
         except:
             print("Error:\tNo email found")
-            resendVerificationEmail(user, password)
+            resendVerificationEmail(user, id_password)
             return url
 
         # select the latest email for parsing
@@ -151,7 +151,7 @@ def getURLFromEmail(user, password):
                 datetime.datetime.now()-datetime.timedelta(days=3)):
             print(bcolors.WARNING + 'ERROR:\t\tThis email is older than 3 ' +
                   'days and is no longer valid' + bcolors.ENDC)
-            resendVerificationEmail(user, password)
+            resendVerificationEmail(user, id_password)
             return ''
     else:
         print('INBOX not found')
@@ -237,7 +237,7 @@ if __name__ == "__main__":
             email_password = token[1].strip()
             id_password = token[2].strip()
 
-            url = getURLFromEmail(user, email_password)
+            url = getURLFromEmail(user, email_password, id_password)
             if(url == ''):
                 print('ERROR:\tUnable to process ' + user + ' at this time.' +
                       ' No url found.')
