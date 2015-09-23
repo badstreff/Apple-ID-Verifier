@@ -38,7 +38,7 @@ time to resend the verification email.
 
 ## Contributors
 
-Myself (Adam J Furbee)
+[Adam Furbee](https://github.com/BadStreff)
 
 ## License
 
