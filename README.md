@@ -1,3 +1,5 @@
+_This project is not longer being actively maintained, however, PR's are still welcome!_
+
 ## Synopsis
 
 The purpose of this script is to automatically verify Apple ID's after
